@@ -2,3 +2,55 @@ canvas#screen {
   border: 2px solid #333;
   box-shadow: 4px 4px 4px #777;
 }
+#score {
+    font-size: 30px;
+    font-weight: bold;
+    position: absolute;
+    top: 48px;
+    left: 790px;
+    z-index: 1;
+}
+#scoreDiv {
+    font-size: 25px;
+    color: blue;
+    font-weight: bold;
+    position: absolute;
+    top: 52px;
+    left: 885px;
+    z-index: 1;
+}
+#level {
+    font-size: 29px;
+    font-weight: bold;
+    position: absolute;
+    top: 15px;
+    left: 795px;
+    z-index: 1;
+}
+#levelDiv {
+    font-size: 25px;
+    color: blue;
+    font-weight: bold;
+    position: absolute;
+    top: 16px;
+    left: 885px;
+    z-index: 1;
+}
+#timerDiv{
+	font-size: 35px;
+	color: red;
+	font-weight: bold;
+	position: absolute;
+	top: 40px;
+	left: 485px;
+	z-index: 1;
+}
+#messageDiv {
+	font-size: 45px;
+	color: red;
+	font-weight: bolder;
+	position: absolute;
+	top: 0px;
+	left: 435px;
+	z-index: 1;
+}
