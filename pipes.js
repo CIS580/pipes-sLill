@@ -18,6 +18,7 @@ var currentFlowDir = "";
 var currentPipe;
 var leadingWaterX;
 var leadingWaterY;
+var levelCompleted;
 
 //Visual HTML/CSS
 var canvas = document.getElementById('screen');
@@ -294,9 +295,9 @@ function CheckAdjacencies()
     for(var i = 2; i < pipes.length; i++)
     {
         //Left edge
-        if ((currentPipe.pipeY - pipes[i].pipeY) < 15 && (currentPipe.pipeY - pipes[i].pipeY) > -15 && (currentPipe.pipeX - (pipes[i].pipeX + 145)) > -15 && (currentPipe.pipeX - (pipes[i].pipeX + 145)) < 15)
+        if (((currentPipe.pipeY - pipes[i].pipeY) < 15 && (currentPipe.pipeY - pipes[i].pipeY) > -15 && (currentPipe.pipeX - (pipes[i].pipeX + 145)) > -15 && (currentPipe.pipeX - (pipes[i].pipeX + 145)) < 15) || currentPipe.pipeX < 15)
         {
-            if (pipes[i].RIGHT == false || currentPipe.pipeX < 15)
+            if (pipes[i].RIGHT == false)
             {
                 currentPipe.canUseLEFT = false;
             }
@@ -307,9 +308,9 @@ function CheckAdjacencies()
         }
 
         //Right edge
-        if ((currentPipe.pipeY - pipes[i].pipeY) < 15 && (currentPipe.pipeY - pipes[i].pipeY) > -15 && ((currentPipe.pipeX + 145) - pipes[i].pipeX) > -15 && ((currentPipe.pipeX + 145) - pipes[i].pipeX) < 15)
+        if (((currentPipe.pipeY - pipes[i].pipeY) < 15 && (currentPipe.pipeY - pipes[i].pipeY) > -15 && ((currentPipe.pipeX + 145) - pipes[i].pipeX) > -15 && ((currentPipe.pipeX + 145) - pipes[i].pipeX) < 15) || (860 - (currentPipe.pipeX + 145)) < 30)
         {
-            if (pipes[i].LEFT == false || currentPipe.pipeX > 800)
+            if (pipes[i].LEFT == false)
             {
                 currentPipe.canUseRIGHT = false;
             }
@@ -320,9 +321,9 @@ function CheckAdjacencies()
         }
 
         //Bottom edge
-        if ((currentPipe.pipeX - pipes[i].pipeX) > -15 && (currentPipe.pipeX - pipes[i].pipeX) < 15 && ((currentPipe.pipeY + 145) - pipes[i].pipeY) > -15 && ((currentPipe.pipeY + 145) - pipes[i].pipeY) < 15)
+        if (((currentPipe.pipeX - pipes[i].pipeX) > -15 && (currentPipe.pipeX - pipes[i].pipeX) < 15 && ((currentPipe.pipeY + 145) - pipes[i].pipeY) > -15 && ((currentPipe.pipeY + 145) - pipes[i].pipeY) < 15) || (1024 - currentPipe.pipeY + 145) < 30)
         {
-            if (pipes[i].UP == false || currentPipe.pipeY > 700)
+            if (pipes[i].UP == false)
             {
                 currentPipe.canUseDOWN = false;
             }
@@ -333,9 +334,9 @@ function CheckAdjacencies()
         }
 
         //Top edge
-        if ((currentPipe.pipeX - pipes[i].pipeX) > -15 && (currentPipe.pipeX - pipes[i].pipeX) < 15 && (currentPipe.pipeY - (pipes[i].pipeY + 145)) > -15 && (currentPipe.pipeY - (pipes[i].pipeY + 145)) < 15)
+        if ((currentPipe.pipeX - pipes[i].pipeX) > -15 && (currentPipe.pipeX - pipes[i].pipeX) < 15 && (currentPipe.pipeY - (pipes[i].pipeY + 145)) > -15 || (currentPipe.pipeY - (pipes[i].pipeY + 145)) < 15)
         {
-            if (pipes[i].DOWN == false || pipes[i].pipeY < 40)
+            if (pipes[i].DOWN == false)
             {
                 currentPipe.canUseUP = false;
             }
@@ -400,40 +401,33 @@ function CheckAndAdvanceWater(elapsedTime)
         case "right":
             if (leadingWaterX > (currentPipe.pipeX + 70))
             {
-                if(currentPipe.DOWN == true && currentPipe.canUseDOWN == true)
-                {
+                if (currentPipe.DOWN == true && currentPipe.canUseDOWN == true) {
                     waterRects[waterRectIndex + 1] = new WaterRect(leadingWaterX, leadingWaterY);
                     waterRectIndex++;
                     currentFlowDir = "down";
                 }
-                else if (currentPipe.RIGHT == true && currentPipe.canUseRIGHT == true)
-                {
+                else if (currentPipe.RIGHT == true && currentPipe.canUseRIGHT == true) {
                     waterRects[waterRectIndex + 1] = new WaterRect(leadingWaterX, leadingWaterY);
                     waterRectIndex++;
                     currentFlowDir = "right";
                 }
-                else if (currentPipe.UP == true && currentPipe.canUseUP == true)
-                {
+                else if (currentPipe.UP == true && currentPipe.canUseUP == true) {
                     waterRects[waterRectIndex + 1] = new WaterRect(leadingWaterX, leadingWaterY);
                     waterRectIndex++;
                     currentFlowDir = "up";
                 }
-                else
-                {
-                    if(currentPipe.DOWN == true)
-                    {
+                else {
+                    if (currentPipe.DOWN == true) {
                         waterRects[waterRectIndex + 1] = new WaterRect(leadingWaterX, leadingWaterY);
                         waterRectIndex++;
                         currentFlowDir = "down";
                     }
-                    else if (currentPipe.RIGHT == true)
-                    {
+                    else if (currentPipe.RIGHT == true) {
                         waterRects[waterRectIndex + 1] = new WaterRect(leadingWaterX, leadingWaterY);
                         waterRectIndex++;
                         currentFlowDir = "right";
                     }
-                    else if (currentPipe.UP == true)
-                    {
+                    else if (currentPipe.UP == true) {
                         waterRects[waterRectIndex + 1] = new WaterRect(leadingWaterX, leadingWaterY);
                         waterRectIndex++;
                         currentFlowDir = "up";
@@ -444,40 +438,34 @@ function CheckAndAdvanceWater(elapsedTime)
         case "left":
             if (leadingWaterX < (currentPipe.pipeX + 72))
             {
-                if (currentPipe.DOWN == true && currentPipe.canUseDOWN == true)
-                {
+                if (currentPipe.DOWN == true && currentPipe.canUseDOWN == true) {
                     waterRects[waterRectIndex + 1] = new WaterRect(leadingWaterX, leadingWaterY);
                     waterRectIndex++;
                     currentFlowDir = "down";
                 }
-                else if (currentPipe.LEFT == true && currentPipe.canUseLEFT == true)
-                {
+
+                else if (currentPipe.LEFT == true && currentPipe.canUseLEFT == true) {
                     waterRects[waterRectIndex + 1] = new WaterRect(leadingWaterX, leadingWaterY);
                     waterRectIndex++;
                     currentFlowDir = "left";
                 }
-                else if (currentPipe.UP == true && currentPipe.canUseUP == true)
-                {
+                else if (currentPipe.UP == true && currentPipe.canUseUP == true) {
                     waterRects[waterRectIndex + 1] = new WaterRect(leadingWaterX, leadingWaterY);
                     waterRectIndex++;
                     currentFlowDir = "up";
                 }
-                else
-                {
-                    if (currentPipe.DOWN == true)
-                    {
+                else {
+                    if (currentPipe.DOWN == true) {
                         waterRects[waterRectIndex + 1] = new WaterRect(leadingWaterX, leadingWaterY);
                         waterRectIndex++;
                         currentFlowDir = "down";
                     }
-                    else if (currentPipe.LEFT == true)
-                    {
+                    else if (currentPipe.LEFT == true) {
                         waterRects[waterRectIndex + 1] = new WaterRect(leadingWaterX, leadingWaterY);
                         waterRectIndex++;
                         currentFlowDir = "left";
                     }
-                    else if (currentPipe.UP == true)
-                    {
+                    else if (currentPipe.UP == true) {
                         waterRects[waterRectIndex + 1] = new WaterRect(leadingWaterX, leadingWaterY);
                         waterRectIndex++;
                         currentFlowDir = "up";
@@ -508,6 +496,8 @@ function CheckAndAdvanceWater(elapsedTime)
                     waterRects[waterRectIndex + 1] = new WaterRect(leadingWaterX, leadingWaterY);
                     waterRectIndex++;
                     currentFlowDir = "left";
+                    currentPipe.DOWN = false;
+                    currentPipe.canUseDOWN = false;
                 }
                 else
                 {
@@ -535,46 +525,40 @@ function CheckAndAdvanceWater(elapsedTime)
         case "down":
             if (leadingWaterY > (currentPipe.pipeY + 72))
             {
-                if (currentPipe.DOWN == true && currentPipe.canUseDOWN == true)
-                {
+                if (currentPipe.DOWN == true && currentPipe.canUseDOWN == true) {
                     waterRects[waterRectIndex + 1] = new WaterRect(leadingWaterX, leadingWaterY);
                     waterRectIndex++;
                     currentFlowDir = "down";
                 }
-                else if (currentPipe.RIGHT == true && currentPipe.canUseRIGHT == true)
-                {
+                else if (currentPipe.RIGHT == true && currentPipe.canUseRIGHT == true) {
                     waterRects[waterRectIndex + 1] = new WaterRect(leadingWaterX, leadingWaterY);
                     waterRectIndex++;
                     currentFlowDir = "right";
                 }
-                else if (currentPipe.LEFT == true && currentPipe.canUseLEFT == true)
-                {
+                else if (currentPipe.LEFT == true && currentPipe.canUseLEFT == true) {
                     waterRects[waterRectIndex + 1] = new WaterRect(leadingWaterX, leadingWaterY);
                     waterRectIndex++;
                     currentFlowDir = "left";
                 }
-                else
-                {
-                    if (currentPipe.DOWN == true)
-                    {
+                else {
+
+                    if (currentPipe.DOWN == true) {
                         waterRects[waterRectIndex + 1] = new WaterRect(leadingWaterX, leadingWaterY);
                         waterRectIndex++;
                         currentFlowDir = "down";
                     }
-                    else if (currentPipe.RIGHT == true)
-                    {
+                    else if (currentPipe.RIGHT == true) {
                         waterRects[waterRectIndex + 1] = new WaterRect(leadingWaterX, leadingWaterY);
                         waterRectIndex++;
                         currentFlowDir = "right";
                     }
-                    else if (currentPipe.LEFT == true)
-                    {
+                    else if (currentPipe.LEFT == true) {
                         waterRects[waterRectIndex + 1] = new WaterRect(leadingWaterX, leadingWaterY);
                         waterRectIndex++;
                         currentFlowDir = "left";
                     }
                 }
-            }
+                }            
             break;
     }
 }
@@ -620,7 +604,7 @@ canvas.oncontextmenu = function(event) {
 //Sets variables and resets the board for a new game of Pipes
 function NewGame()
 {
-    //backgroundMusic.play();
+    backgroundMusic.play();
     newGame = 0;
     waterRects = [];
     leadingWaterX = 15;
@@ -628,6 +612,7 @@ function NewGame()
     waterRects[0] = new WaterRect(leadingWaterX, leadingWaterY);
     currentFlowDir = "right";
     score = 0;
+    levelCompleted = 0;
     level = 1;
     levelTimer = 0;
     levelTimerCounter = 1000;
@@ -667,13 +652,15 @@ function NewGame()
     }
 }
 
-function NewLevel()
+function NewLevel(ctx)
 {
     levelCompleteSound.play();
+    ctx.clearRect(0, 0, canvas.clientWidth, canvas.clientHeight);
     waterRects = []; waterRects[0] = new WaterRect(15, 68);
     currentFlowDir = "right";
     score = score + levelTimerCounter;
-    level++;
+    levelCompleted = 0;
+    level = level + 1;
     levelTimer = 0;
     levelTimerCounter = 1000;
     levelDiv.innerHTML = level;
@@ -756,7 +743,7 @@ function update(elapsedTime) {
     if(collisionDetected == 1)
     {
         collisionDetected = 0;
-        NewLevel();
+        levelCompleted = 1;
     }
 }
 
@@ -830,6 +817,12 @@ Game.prototype.loop = function(newTime) {
   var game = this;
   var elapsedTime = newTime - this.oldTime;
   this.oldTime = newTime;
+
+  if(levelCompleted == 1)
+  {
+      levelCompleted = 0;
+      NewLevel(this.frontCtx);
+  }
 
   if(!this.paused) this.update(elapsedTime);
   this.render(elapsedTime, this.frontCtx);
