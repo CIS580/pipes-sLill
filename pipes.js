@@ -755,8 +755,8 @@ function update(elapsedTime) {
     ABIntersect(leadingWaterX, leadingWaterY, pipes[1].pipeX, pipes[1].pipeY, false);
     if(collisionDetected == 1)
     {
-        NewLevel();
         collisionDetected = 0;
+        NewLevel();
     }
 }
 
